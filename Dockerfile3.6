@@ -1,0 +1,5 @@
+FROM python:3.6.8-alpine3.8
+LABEL maintainer="m@yefu.org"
+RUN apk add --no-cache zip
+COPY package.sh .
+CMD ./package.sh
