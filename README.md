@@ -3,7 +3,7 @@
 This docker image makes it possible to package an AWS python lambda function with a single line:
 
 ```bash
-docker run --rm --user $(id -u):$(id -g) -v ${PWD}:/source yefuwang/lambda_python_packer:python3.7
+docker run --rm --user $(id -u):$(id -g) -v ${PWD}:/source reboot8/lambda_python_packer:python3.7
 ```
 
 The output will be available under the current folder with the name deploy.zip. By default, the target runtime is **python 3.7**. 
