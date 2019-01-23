@@ -8,7 +8,7 @@ DEST_FILE=${SRC}/deploy.zip
 rm -f ${DEST_FILE}
 
 WORK_DIR=`mktemp -d -p /tmp`
-cp ${SRC}/* ${WORK_DIR} -r -v
+cp ${SRC}/* ${WORK_DIR} -r 
 
 PYENV_DIR=`mktemp -d -p /tmp`
 
@@ -37,7 +37,25 @@ rm -f ${SRC}/deploy.zip
 
 # Install and copy dependencies, if any;
 if [ -f ./requirements.txt ]; then
-    pip install -r requirements.txt
+    if [ -z "$MINIMIZE" ]; then
+        echo "Creating full package"
+        pip install -r requirements.txt --disable-pip-version-check --no-cache-dir
+    else 
+        echo "Creating minimized package by removing boto3, pip, and setuptools"
+
+        ## User wants to minimize the package.
+        # Remove boto3 from the requirements because lambda runtime already
+        # has it
+
+        sed '/boto3/d' ./requirements.txt >/tmp/reduced_req.txt
+        pip install -r /tmp/reduced_req.txt --disable-pip-version-check --no-cache-dir
+
+        # Remove pip and setup_tools because user may not need
+        # to further install packages at run time.
+
+        rm -rf $PYENV_DIR/lib/python${PYTHON_VERION}/site-packages/pip
+        rm -rf $PYENV_DIR/lib/python${PYTHON_VERION}/site-packages/setup_tools
+    fi
     cd $PYENV_DIR/lib/python${PYTHON_VERION}/site-packages
     zip -r9q ${DEST_FILE} .
 else
