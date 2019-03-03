@@ -15,6 +15,11 @@ See [minimize option ](#minimize) for details.
 
 The output will be available under the current folder with the name deploy.zip. By default, the target runtime is **python 3.7**. 
 
+If your pip images requires some dev packages to install, please use the docker image python3.7large, which contains enough packages to install packages like pillow. The commandline becomes:
+```bash
+docker run --rm --user $(id -u):$(id -g) -v ${PWD}:/source reboot8/lambda_python_packer:python3.7large
+```
+
 ## Details
 
 Here are what this script does:
@@ -45,6 +50,7 @@ Use tags to target at different python runtime.
 | Tag        | Target Runtime           |
 | ------------- |:-------------:|
 | latest      | The latest supported by AWS (python 3.7 now) |
+| python3.7large | Python3.7 + dev packages|
 | python3.7      | python3.7      |
 | python3.6 | python3.7      |
 | python2.7 | python2.7 |
